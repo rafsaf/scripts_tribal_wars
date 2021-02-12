@@ -152,13 +152,43 @@ function process() {
                         player.disabled === false && !removedPlayers.includes(player.nick)
                     );
                 });
+
+                let i = 0
+                const len = notDisabledPlayers.length
+                const newProgressPar = (i, len) => {
+                    return (`<h1 style="margin-top:10px;font-size:40px">${i}/${len}</h1><h1>Czekaj...</h1>`)
+                }
+
+                const progress = document.createElement("div");
+                progress.setAttribute("id", "super-simple-progress-bar")
+                progress.style.width = "300px";
+                progress.style.height = "200px";
+                progress.style.position = "absolute";
+                progress.style.background = "#f4e4bc";
+                progress.style.margin = "auto";
+                progress.style.color = "#803000";
+                progress.style.top = 0;
+                progress.style.bottom = "20%";
+                progress.style.left = 0;
+                progress.style.right = 0;
+                progress.style.border = "5px solid #804000";
+                progress.style.textAlign = "center";
+                progress.style.fontSize = "40px";
+                progress.innerHTML = newProgressPar(i, len);
+                document.body.appendChild(progress);
+
                 for (player of notDisabledPlayers) {
+                    progress.innerHTML = newProgressPar(i, len);
                     const response = await fetch(GetURL(player.id));
                     const html = await response.text();
                     const playerPageDocument = ConvertToHTML(html);
                     const useNick = showNicknames ? true : false;
                     AddPlayerPageToOutput(playerPageDocument, player.nick, useNick);
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                    i += 1;
                 }
+                progress.style.display = "none";
+
                 localStorage.setItem("troops-parseTime" + mode, String(today));
                 localStorage.setItem("troops-storageDate" + mode, afterCacheTime);
                 localStorage.setItem("troops-output" + mode, output);
@@ -172,7 +202,7 @@ function process() {
                 `<h2 style="width:600px;">${scriptName}:</h2>
               ${Data.removedPlayers === ""
                     ? ""
-                    : `<p>Nieuwzględnieni: ${Data.removedPlayers}</p>`
+                    : `<p>Nieuwzglednieni: ${Data.removedPlayers}</p>`
                 }${lackAccessPlayers === ""
                     ? ``
                     : `<h4>Uwaga, czesciowy lub calkowity brak podgladu:</h4>` +
