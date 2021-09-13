@@ -11,7 +11,7 @@ jobs:
           mkdir public
           cp ./*.js public
           cd public
-          echo "<html><body><h1>Scripts listing</h1>" > index.html
+          echo "<html><body style='font-size: xx-large;'><h1><b>Scripts listing</b></h1>" > index.html
           find -exec echo "<a href='{}'>{}</a><br/>" \; >> index.html
           echo "</body></html>" >> index.html
       - name: Deploy
