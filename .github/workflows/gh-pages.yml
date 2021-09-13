@@ -1,0 +1,19 @@
+name: Build and Deploy
+on: [push]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: build
+        run: |
+          mkdir public && cd public
+          echo "<html><body><h1>Scripts listing</h1>" > index.html
+          find -exec echo "<a href='{}'>{}</a><br/>" \; >> index.html
+          echo "</body></html>" >> index.html
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@4.1.5
+        with:
+          branch: gh-pages
+          folder: public
