@@ -1,4 +1,4 @@
-## More info about usage https://plemiona-planer.pl/pl/documentation#instalacja-niezbednych-skryptow
+## More info about usage https://plemiona-planer.pl/en/documentation#instalacja-niezbednych-skryptow
 
 You should use official innogames cdn, eg. `collect_troops.js` script:
 
@@ -35,6 +35,26 @@ javascript: var Data = {
   showNicknamesDeff: false,
 };
 $.getScript("https://rafsaf.github.io/scripts_tribal_wars/collect_troops.js");
+void 0;
+```
+
+Or English version of the script:
+
+```js
+javascript: var DATA_COLLECT_TROOPS = {
+  cache: true,
+  cacheTime: 5,
+  removedPlayers: "",
+  firstLineTroops: "Village,spear,swordsman,axeman,etc...,",
+  showFirstLineTroops: false,
+  showNicknamesTroops: false,
+  firstLineDeff: "Village,place,spear,swordsman,axeman,etc...,",
+  showFirstLineDeff: false,
+  showNicknamesDeff: false,
+};
+$.getScript(
+  "https://rafsaf.github.io/scripts_tribal_wars/collect_troops_en.js"
+);
 void 0;
 ```
 
