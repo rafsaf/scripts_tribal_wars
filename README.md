@@ -27,6 +27,7 @@ javascript: var COLLECT_TROOPS_DATA_V2 = {
   cache: true,
   cacheTime: 5,
   removedPlayers: "",
+  allowedPlayers: "",
   firstLineTroops: "",
   showFirstLineTroops: false,
   showNicknamesTroops: false,
