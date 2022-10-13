@@ -281,7 +281,7 @@ var collectTroopsScriptByRafsafV2 = () => {
                     currentPage += 1;
                     await new Promise((resolve) => setTimeout(resolve, 300));
                 }
-                console.debug(`${player.nick} pages ${currentPage} villages ${addedVillages}`);
+                console.debug(`${player.nick} pages ${currentPage - 1} villages ${addedVillages}`);
                 playerCounter += 1;
             }
             progress.style.display = "none";
