@@ -350,10 +350,7 @@ var collectTroopsScriptByRafsafV2 = () => {
       for (let player of notDisabledPlayers) {
         let currentPage = 1;
         let addedVillages = 0;
-        while (
-          currentPage === 1 ||
-          (currentPage - 1) * 1000 === addedVillages
-        ) {
+        while ((currentPage - 1) * 1000 === addedVillages) {
           progress.innerHTML = newProgressBar(playerCounter);
           const response = await fetch(getPlayerURL(player.id, currentPage));
           const html = await response.text();
@@ -365,6 +362,9 @@ var collectTroopsScriptByRafsafV2 = () => {
           currentPage += 1;
           await new Promise((resolve) => setTimeout(resolve, 300));
         }
+        console.debug(
+          `${player.nick} pages ${currentPage} villages ${addedVillages}`
+        );
         playerCounter += 1;
       }
       progress.style.display = "none";
