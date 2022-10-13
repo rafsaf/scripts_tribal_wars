@@ -279,6 +279,7 @@ var collectTroopsScriptByRafsafV2 = () => {
                     const html = await response.text();
                     const playerPageDocument = ConvertToHTML(html);
                     addedVillages += AddPlayerPageToOutput(playerPageDocument, player.nick);
+                    currentPage += 1;
                     await new Promise((resolve) => setTimeout(resolve, 300));
                 }
                 playerCounter += 1;

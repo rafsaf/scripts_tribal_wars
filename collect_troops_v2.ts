@@ -362,6 +362,7 @@ var collectTroopsScriptByRafsafV2 = () => {
             playerPageDocument,
             player.nick
           );
+          currentPage += 1;
           await new Promise((resolve) => setTimeout(resolve, 300));
         }
         playerCounter += 1;
