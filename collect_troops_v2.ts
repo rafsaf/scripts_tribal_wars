@@ -363,7 +363,7 @@ var collectTroopsScriptByRafsafV2 = () => {
           await new Promise((resolve) => setTimeout(resolve, 300));
         }
         console.debug(
-          `${player.nick} pages ${currentPage} villages ${addedVillages}`
+          `${player.nick} pages ${currentPage - 1} villages ${addedVillages}`
         );
         playerCounter += 1;
       }
