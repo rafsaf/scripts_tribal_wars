@@ -115,9 +115,9 @@ var CT_EN_MESSAGES_V2: I18nLanguageMessages = {
   GO_TO_TRIBE_MEMBERS_TAB:
     "Error: Go to the Tribe -> Members -> Troops or Defence",
   EMPTY_PLAYERS_TABLE: "Error: Could not get players from current page",
-  SCRIPT_NAME_ARMY: "Army Collection",
-  SCRIPT_NAME_DEFF: "Deff Collection",
-  OMMITED_PLAYERS: "Ommited",
+  SCRIPT_NAME_ARMY: "Army Collection V2 by Rafsaf",
+  SCRIPT_NAME_DEFF: "Deff Collection V2 by Rafsaf",
+  OMMITED_PLAYERS: "Ommited because of config",
   ATTENTION_PARTIAL_OR_LACK_OVERVIEW:
     "Attention, partial or complete lack of overview",
   GENERATED: "Generated at",
@@ -126,10 +126,10 @@ var CT_EN_MESSAGES_V2: I18nLanguageMessages = {
 var CT_PL_MESSAGES_V2: I18nLanguageMessages = {
   GO_TO_TRIBE_MEMBERS_TAB:
     "Błąd: Przejdź do Plemię -> Członkowie -> Wojska/Obrona",
-  EMPTY_PLAYERS_TABLE: "Could not get players from current page",
-  SCRIPT_NAME_ARMY: "Army Collection",
-  SCRIPT_NAME_DEFF: "Deff Collection",
-  OMMITED_PLAYERS: "Nieuwzględnieni",
+  EMPTY_PLAYERS_TABLE: "Błąd: Brak graczy na obecnej stronie",
+  SCRIPT_NAME_ARMY: "Zbiórka Wojska V2 by Rafsaf",
+  SCRIPT_NAME_DEFF: "Zbiórka Deffa V2 by Rafsaf",
+  OMMITED_PLAYERS: "Pominięci przez ustawienia skryptu",
   ATTENTION_PARTIAL_OR_LACK_OVERVIEW:
     "Uwaga! Częściowy lub całkowity brak podglądu",
   GENERATED: "Wygenerowano",
@@ -291,11 +291,11 @@ var collectTroopsScriptByRafsafV2 = () => {
     if (now.getTime() < cacheExpire && COLLECT_TROOPS_DATA_V2.cache) {
       generatedAt = new Date(
         Number(localStorage.getItem(LS_CREATE_TIME))
-      ).toLocaleDateString();
+      ).toLocaleString();
       output = String(localStorage.getItem(LS_OUTPUT_TEXT));
       lackOfAccessPlayers = String(localStorage.getItem(LS_LACK_PLAYERS_TEXT));
     } else {
-      generatedAt = now.toLocaleDateString();
+      generatedAt = now.toLocaleString();
 
       // calculate lackOfAccessPlayers
       for (let player of players) {
@@ -396,10 +396,9 @@ var collectTroopsScriptByRafsafV2 = () => {
             ? ``
             : `<h4>${I18N.ATTENTION_PARTIAL_OR_LACK_OVERVIEW}:</h4> ${lackOfAccessPlayers}`
         }
-        <textarea rows="15" style="width:95%;margin-top:15px;margin-bottom:25px;">
-        ${showFirstLine ? firstLine + "\r\n" : ""}
-        ${output}
-        </textarea>
+        <textarea rows="15" style="width:95%;margin-top:15px;margin-bottom:25px;">${
+          showFirstLine ? firstLine + "\r\n" : ""
+        }${output}</textarea>
         <p style="text-align:right">
         <small>${I18N.GENERATED} ${generatedAt}.</small>
         </p>
