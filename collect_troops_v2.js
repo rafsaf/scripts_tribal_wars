@@ -103,7 +103,7 @@ var CT_EN_MESSAGES_V2 = {
     FINAL_SCRAPED_PLAYERS: "Sucessfully collected players",
     GENERATED: "Generated at",
     SCRIPT_HELP: "HELP",
-    WAIT: "Wait...",
+    WAIT: "Wait",
     NO_PLAYERS_SELECTOR_ON_PAGE: "Fatal error: Could not find html selector with players!",
 };
 var CT_PL_MESSAGES_V2 = {
@@ -116,7 +116,7 @@ var CT_PL_MESSAGES_V2 = {
     ATTENTION_PARTIAL_OR_LACK_OVERVIEW: "Pominięci przez częściowy dostęp do przeglądu",
     GENERATED: "Wygenerowano",
     FINAL_SCRAPED_PLAYERS: "Pomyślnie zebrany przegląd",
-    WAIT: "Czekaj...",
+    WAIT: "Czekaj",
     SCRIPT_HELP: "POMOC",
     NO_PLAYERS_SELECTOR_ON_PAGE: "Błąd krytyczny: Nie istnieje selektor z listą graczy!",
 };
@@ -159,7 +159,7 @@ var collectTroopsScriptByRafsafV2 = () => {
     console.log("start collectTroopsScriptByRafsafV2 with config:", scriptConfig);
     // Check url location
     if (params.get("screen") !== "ally" ||
-        (scriptModeDefence() && scriptModeTroops())) {
+        (!scriptModeDefence() && !scriptModeTroops())) {
         console.error("invalid location", location.search);
         UI.ErrorMessage(I18N.GO_TO_TRIBE_MEMBERS_TAB, "3e3");
         return;
@@ -285,7 +285,7 @@ var collectTroopsScriptByRafsafV2 = () => {
             result = cachedResult;
         }
         else {
-            if (scriptConfig.allowedPlayers.length) {
+            if (scriptConfig.allowedPlayers.length === 0) {
                 notDisabledPlayers = players.filter((player) => {
                     return (!player.disabled &&
                         !scriptConfig.removedPlayers.includes(player.nick));
