@@ -121,7 +121,7 @@ var CT_PL_MESSAGES_V2 = {
     NO_PLAYERS_SELECTOR_ON_PAGE: "Błąd krytyczny: Nie istnieje selektor z listą graczy!",
 };
 var collectTroopsScriptByRafsafV2 = () => {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
     const players = [];
     const lackOfAccessPlayers = [];
     const params = new URLSearchParams(location.search);
@@ -140,20 +140,24 @@ var collectTroopsScriptByRafsafV2 = () => {
     const scriptConfig = {
         cache: (_d = userConfig.cache) !== null && _d !== void 0 ? _d : true,
         cacheTime: (_e = userConfig.cacheTime) !== null && _e !== void 0 ? _e : 5,
-        removedPlayers: ((_f = userConfig.removedPlayers) !== null && _f !== void 0 ? _f : "").split(";"),
-        allowedPlayers: ((_g = userConfig.allowedPlayers) !== null && _g !== void 0 ? _g : "").split(";"),
+        removedPlayers: userConfig.removedPlayers
+            ? userConfig.removedPlayers.split(";")
+            : [],
+        allowedPlayers: userConfig.allowedPlayers
+            ? userConfig.allowedPlayers.split(";")
+            : [],
         showFirstLine: scriptModeTroops()
-            ? (_h = userConfig.showFirstLineTroops) !== null && _h !== void 0 ? _h : false
-            : (_j = userConfig.showFirstLineDeff) !== null && _j !== void 0 ? _j : false,
+            ? (_f = userConfig.showFirstLineTroops) !== null && _f !== void 0 ? _f : false
+            : (_g = userConfig.showFirstLineDeff) !== null && _g !== void 0 ? _g : false,
         showNicknames: scriptModeTroops()
-            ? (_k = userConfig.showNicknamesTroops) !== null && _k !== void 0 ? _k : false
-            : (_l = userConfig.showNicknamesDeff) !== null && _l !== void 0 ? _l : false,
+            ? (_h = userConfig.showNicknamesTroops) !== null && _h !== void 0 ? _h : false
+            : (_j = userConfig.showNicknamesDeff) !== null && _j !== void 0 ? _j : false,
         scriptName: scriptModeTroops()
             ? I18N.SCRIPT_NAME_ARMY
             : I18N.SCRIPT_NAME_DEFF,
         firstLine: scriptModeTroops()
-            ? (_m = userConfig.firstLineTroops) !== null && _m !== void 0 ? _m : ""
-            : (_o = userConfig.firstLineTroops) !== null && _o !== void 0 ? _o : "",
+            ? (_k = userConfig.firstLineTroops) !== null && _k !== void 0 ? _k : ""
+            : (_l = userConfig.firstLineTroops) !== null && _l !== void 0 ? _l : "",
         language: language,
     };
     console.log("start collectTroopsScriptByRafsafV2 with config:", scriptConfig);
@@ -189,7 +193,7 @@ var collectTroopsScriptByRafsafV2 = () => {
     if (membersHTMLElement !== null) {
         const tribeH2Element = membersHTMLElement.querySelector("h2");
         if (tribeH2Element !== null) {
-            tribeName = (_p = tribeH2Element.textContent) !== null && _p !== void 0 ? _p : "";
+            tribeName = (_m = tribeH2Element.textContent) !== null && _m !== void 0 ? _m : "";
             const tribeLevelInName = tribeName.indexOf("(");
             if (tribeLevelInName !== -1) {
                 tribeName = tribeName.slice(0, tribeLevelInName).trim();
@@ -389,8 +393,7 @@ var collectTroopsScriptByRafsafV2 = () => {
         <p style="text-align:right; margin:2px">
         <small>${I18N.SCRIPT_NAME_WITH_AUTHOR}</small>
         <p style="text-align:right; margin:2px">
-        <small>${I18N.GENERATED} ${new Date(result.generatedAt).toLocaleString()}</small>
-        </p>
+        <small>${I18N.GENERATED} ${new Date(result.generatedAt).toLocaleString()}</small></p>
         <p style="text-align:right; margin:2px">
         <a target="_blank" rel="noopener" href="https://forum.plemiona.pl/index.php?threads/zbi%C3%B3rka-wojska-i-obrony.128630/">${I18N.SCRIPT_HELP}</a>
         </p>
