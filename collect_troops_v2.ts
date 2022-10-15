@@ -217,8 +217,12 @@ var collectTroopsScriptByRafsafV2 = () => {
   const scriptConfig: Config = {
     cache: userConfig.cache ?? true,
     cacheTime: userConfig.cacheTime ?? 5,
-    removedPlayers: (userConfig.removedPlayers ?? "").split(";"),
-    allowedPlayers: (userConfig.allowedPlayers ?? "").split(";"),
+    removedPlayers: userConfig.removedPlayers
+      ? userConfig.removedPlayers.split(";")
+      : [],
+    allowedPlayers: userConfig.allowedPlayers
+      ? userConfig.allowedPlayers.split(";")
+      : [],
     showFirstLine: scriptModeTroops()
       ? userConfig.showFirstLineTroops ?? false
       : userConfig.showFirstLineDeff ?? false,
@@ -520,8 +524,7 @@ var collectTroopsScriptByRafsafV2 = () => {
         <p style="text-align:right; margin:2px">
         <small>${I18N.GENERATED} ${new Date(
         result.generatedAt
-      ).toLocaleString()}</small>
-        </p>
+      ).toLocaleString()}</small></p>
         <p style="text-align:right; margin:2px">
         <a target="_blank" rel="noopener" href="https://forum.plemiona.pl/index.php?threads/zbi%C3%B3rka-wojska-i-obrony.128630/">${
           I18N.SCRIPT_HELP
