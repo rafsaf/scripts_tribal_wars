@@ -104,7 +104,8 @@ var CT_EN_MESSAGES_V2 = {
     GENERATED: "Generated at",
     SCRIPT_HELP: "HELP",
     WAIT: "Wait",
-    NO_PLAYERS_SELECTOR_ON_PAGE: "Fatal error: Could not find html selector with players!",
+    NO_PLAYERS_SELECTOR_ON_PAGE: "Fatal error: Could not find html selector with players, hCaptcha bot protection?",
+    CRITICAL_ERROR_HCAPTCHA: "Fatal error: No player page table selector, hCaptcha bot protection?",
 };
 var CT_PL_MESSAGES_V2 = {
     GO_TO_TRIBE_MEMBERS_TAB: "Błąd: Przejdź do Plemię -> Członkowie -> Wojska/Obrona",
@@ -118,7 +119,8 @@ var CT_PL_MESSAGES_V2 = {
     FINAL_SCRAPED_PLAYERS: "Pomyślnie zebrany przegląd",
     WAIT: "Czekaj",
     SCRIPT_HELP: "POMOC",
-    NO_PLAYERS_SELECTOR_ON_PAGE: "Błąd krytyczny: Nie istnieje selektor z listą graczy!",
+    NO_PLAYERS_SELECTOR_ON_PAGE: "Błąd krytyczny: Nie istnieje selektor z listą graczy, ochrona botowa hCaptcha?",
+    CRITICAL_ERROR_HCAPTCHA: "Błąd krytyczny: Brak tabeli na stronie gracza, ochrona botowa hCaptcha?",
 };
 var collectTroopsScriptByRafsafV2 = () => {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
@@ -158,6 +160,7 @@ var collectTroopsScriptByRafsafV2 = () => {
         firstLine: scriptModeTroops()
             ? (_k = userConfig.firstLineTroops) !== null && _k !== void 0 ? _k : ""
             : (_l = userConfig.firstLineTroops) !== null && _l !== void 0 ? _l : "",
+        villagesPerPage: scriptModeTroops() ? 1000 : 2000,
         language: language,
     };
     console.log("start collectTroopsScriptByRafsafV2 with config:", scriptConfig);
@@ -207,6 +210,9 @@ var collectTroopsScriptByRafsafV2 = () => {
         let playerOutputTroops = "";
         let coord = "";
         let villages = 0;
+        if (tableRows.length === 0) {
+            throw I18N.CRITICAL_ERROR_HCAPTCHA;
+        }
         tableRows.forEach((oneVillageNode, rowIndex) => {
             if (rowIndex === 0) {
                 return;
@@ -298,7 +304,8 @@ var collectTroopsScriptByRafsafV2 = () => {
             else {
                 notDisabledPlayers = players.filter((player) => {
                     return (!player.disabled &&
-                        scriptConfig.allowedPlayers.includes(player.nick));
+                        scriptConfig.allowedPlayers.includes(player.nick) &&
+                        !scriptConfig.removedPlayers.includes(player.nick));
                 });
             }
             const newProgressBar = (progressNumber) => {
@@ -330,7 +337,8 @@ var collectTroopsScriptByRafsafV2 = () => {
             for (let player of notDisabledPlayers) {
                 let currentPage = 1;
                 let addedVillages = 0;
-                while ((currentPage - 1) * 1000 === addedVillages) {
+                while ((currentPage - 1) * scriptConfig.villagesPerPage ===
+                    addedVillages) {
                     progress.innerHTML = newProgressBar(playerCounter);
                     const response = await fetch(getPlayerURL(player.id, currentPage));
                     const html = await response.text();
@@ -359,11 +367,26 @@ var collectTroopsScriptByRafsafV2 = () => {
                 disabledPlayers: disabledPlayers,
                 lackOfAccessPlayers: lackOfAccessPlayers,
             };
-            try {
-                localStorage.setItem(cacheKey, JSON.stringify(result));
+            if (!scriptConfig.cache) {
+                console.log("script cache not enabled, skipping save to localStorage");
             }
-            catch (error) {
-                console.error("could not save result of script to localStorage", error);
+            else {
+                try {
+                    // take up to 1MB of localStorage space, modern browsers have maximum 5MB
+                    const resultString = JSON.stringify(result);
+                    const resultSize = new Blob([resultString]).size;
+                    // result in bytes
+                    if (resultSize <= 1048576) {
+                        console.log("result saved to localStorage, size in bytes", resultSize);
+                        localStorage.setItem(cacheKey, resultString);
+                    }
+                    else {
+                        console.warn("size of result in bytes more than 1MB, skipping save in localStorage", resultSize);
+                    }
+                }
+                catch (error) {
+                    console.warn("could not save result of script to localStorage", error);
+                }
             }
         }
         Dialog.show("collectTroopsScriptByRafsafV2ResultDialog", `
@@ -401,4 +424,10 @@ var collectTroopsScriptByRafsafV2 = () => {
     }
     RenderPlayerTroops();
 };
-collectTroopsScriptByRafsafV2();
+try {
+    collectTroopsScriptByRafsafV2();
+}
+catch (error) {
+    // @ts-ignore
+    UI.ErrorMessage(String(error), "5e3");
+}
