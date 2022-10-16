@@ -9,7 +9,7 @@ jobs:
       - name: build
         run: |
           mkdir public
-          cp ./*.js public
+          cp ./public/*.js public
           cd public
           echo "<html><body style='font-size: xx-large;'><h1><b>Scripts listing</b></h1>" > index.html
           find -exec echo "<a href='{}'>{}</a><br/>" \; >> index.html

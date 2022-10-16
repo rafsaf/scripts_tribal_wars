@@ -1,4 +1,4 @@
-/* 
+/*!
 MIT License
 
 Copyright (c) 2022 rafal.safin12@gmail.com
@@ -89,8 +89,7 @@ firstLineDeff variable, applies only in Defence tab, similar to showFirstLineTro
 when showFirstLineTroops is true, applies only in Defence tab, similar 
 to firstLineTroops
 
-*/
-
+*/ //!
 interface TribalWarsUI {
   ErrorMessage: (message: string, showTime: string) => void;
 }
@@ -149,6 +148,7 @@ interface localStorageResult {
   output: string;
   generatedAt: number;
   expiresAt: number;
+
   tribeName: string;
   finalPlayers: TWPlayer[];
   disabledPlayers: TWPlayer[];
@@ -215,6 +215,7 @@ var collectTroopsScriptByRafsafV2 = async () => {
   const scriptModeDefence = () => {
     return scriptMode === "members_defense";
   };
+  console.log("dss");
 
   const userConfig: CollectTroopsDataConfig =
     COLLECT_TROOPS_DATA_V2 ?? undefined ?? Data ?? {};

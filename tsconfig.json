@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "module": "commonjs"
+  },
+  "compileOnSave": true,
+  "buildOptions": {},
+  "include": ["./*.ts", "src/collect_troops_v2.ts"]
+}

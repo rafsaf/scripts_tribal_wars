@@ -1,0 +1,23 @@
+{
+  "name": "scripts_tribal_wars",
+  "version": "1.0.0",
+  "description": "You should use official innogames cdn, eg. `collect_troops.js` script:",
+  "main": ".",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rafsaf/scripts_tribal_wars.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rafsaf/scripts_tribal_wars/issues"
+  },
+  "homepage": "https://github.com/rafsaf/scripts_tribal_wars#readme",
+  "dependencies": {
+    "esbuild": "^0.15.11",
+    "typescript": "^4.8.4"
+  }
+}
