@@ -168,13 +168,13 @@ var collectTroopsScriptByRafsafV2 = () => {
     if (params.get("screen") !== "ally" ||
         (!scriptModeDefence() && !scriptModeTroops())) {
         console.error("invalid location", location.search);
-        UI.ErrorMessage(I18N.GO_TO_TRIBE_MEMBERS_TAB, "3e3");
+        UI.ErrorMessage(I18N.GO_TO_TRIBE_MEMBERS_TAB, "3000");
         return;
     }
     // Adds players from current html to get array with players nicknames and ids
     const playersTableElement = document.querySelector("#ally_content .input-nicer");
     if (playersTableElement === null) {
-        UI.ErrorMessage(I18N.NO_PLAYERS_SELECTOR_ON_PAGE, "4e3");
+        UI.ErrorMessage(I18N.NO_PLAYERS_SELECTOR_ON_PAGE, "4000");
         return;
     }
     for (let playerElement of Array.from(playersTableElement)) {
@@ -188,7 +188,7 @@ var collectTroopsScriptByRafsafV2 = () => {
         });
     }
     if (players.length === 0) {
-        UI.ErrorMessage(I18N.EMPTY_PLAYERS_TABLE, "4e3");
+        UI.ErrorMessage(I18N.EMPTY_PLAYERS_TABLE, "4000");
         return;
     }
     // Get tribe name from current html
@@ -429,5 +429,5 @@ try {
 }
 catch (error) {
     // @ts-ignore
-    UI.ErrorMessage(String(error), "5e3");
+    UI.ErrorMessage(String(error), "5000");
 }
