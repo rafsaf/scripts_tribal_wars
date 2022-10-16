@@ -8,9 +8,9 @@ jobs:
         uses: actions/checkout@v2
       - name: build
         run: |
-          mkdir public
-          cp ./public/*.js public
-          cd public
+          mkdir .out
+          cp ./public/*.js .out
+          cd .out
           echo "<html><body style='font-size: xx-large;'><h1><b>Scripts listing</b></h1>" > index.html
           find -exec echo "<a href='{}'>{}</a><br/>" \; >> index.html
           echo "</body></html>" >> index.html
@@ -18,4 +18,4 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@4.1.5
         with:
           branch: gh-pages
-          folder: public
+          folder: .out
