@@ -167,7 +167,6 @@ var collectTroopsScriptByRafsafV2 = async () => {
     // Check url location
     if (params.get("screen") !== "ally" ||
         (!scriptModeDefence() && !scriptModeTroops())) {
-        console.error("invalid location", location.search);
         UI.ErrorMessage(I18N.GO_TO_TRIBE_MEMBERS_TAB, "3000");
         return;
     }
