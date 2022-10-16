@@ -15,7 +15,7 @@ jobs:
           find -exec echo "<a href='{}'>{}</a><br/>" \; >> index.html
           echo "</body></html>" >> index.html
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@4.1.5
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
           folder: .out
