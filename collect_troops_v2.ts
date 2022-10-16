@@ -253,7 +253,7 @@ var collectTroopsScriptByRafsafV2 = () => {
     (!scriptModeDefence() && !scriptModeTroops())
   ) {
     console.error("invalid location", location.search);
-    UI.ErrorMessage(I18N.GO_TO_TRIBE_MEMBERS_TAB, "3e3");
+    UI.ErrorMessage(I18N.GO_TO_TRIBE_MEMBERS_TAB, "3000");
     return;
   }
 
@@ -262,7 +262,7 @@ var collectTroopsScriptByRafsafV2 = () => {
     "#ally_content .input-nicer"
   );
   if (playersTableElement === null) {
-    UI.ErrorMessage(I18N.NO_PLAYERS_SELECTOR_ON_PAGE, "4e3");
+    UI.ErrorMessage(I18N.NO_PLAYERS_SELECTOR_ON_PAGE, "4000");
     return;
   }
   for (let playerElement of Array.from(playersTableElement)) {
@@ -277,7 +277,7 @@ var collectTroopsScriptByRafsafV2 = () => {
   }
 
   if (players.length === 0) {
-    UI.ErrorMessage(I18N.EMPTY_PLAYERS_TABLE, "4e3");
+    UI.ErrorMessage(I18N.EMPTY_PLAYERS_TABLE, "4000");
     return;
   }
 
@@ -575,5 +575,5 @@ try {
   collectTroopsScriptByRafsafV2();
 } catch (error) {
   // @ts-ignore
-  UI.ErrorMessage(String(error), "5e3");
+  UI.ErrorMessage(String(error), "5000");
 }
