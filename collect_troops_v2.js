@@ -122,7 +122,7 @@ var CT_PL_MESSAGES_V2 = {
     NO_PLAYERS_SELECTOR_ON_PAGE: "Błąd krytyczny: Nie istnieje selektor z listą graczy, ochrona botowa hCaptcha?",
     CRITICAL_ERROR_HCAPTCHA: "Błąd krytyczny: Brak tabeli na stronie gracza, ochrona botowa hCaptcha?",
 };
-var collectTroopsScriptByRafsafV2 = () => {
+var collectTroopsScriptByRafsafV2 = async () => {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
     const players = [];
     const lackOfAccessPlayers = [];
@@ -317,7 +317,7 @@ var collectTroopsScriptByRafsafV2 = () => {
         `;
             };
             const progress = document.createElement("div");
-            progress.setAttribute("id", "super-simple-progress-bar");
+            progress.setAttribute("id", "collectTroopsScriptByRafsafV2ProgressBar");
             progress.style.width = "300px";
             progress.style.height = "200px";
             progress.style.position = "absolute";
@@ -350,7 +350,7 @@ var collectTroopsScriptByRafsafV2 = () => {
                 }
                 playerCounter += 1;
             }
-            progress.style.display = "none";
+            progress.remove();
             finalPlayers = notDisabledPlayers.filter((player) => {
                 return !lackOfAccessPlayers.includes(player);
             });
@@ -422,12 +422,12 @@ var collectTroopsScriptByRafsafV2 = () => {
         </p>
         `);
     }
-    RenderPlayerTroops();
+    await RenderPlayerTroops();
 };
-try {
-    collectTroopsScriptByRafsafV2();
-}
-catch (error) {
-    // @ts-ignore
+collectTroopsScriptByRafsafV2().catch((error) => {
+    const progress = document.getElementById("collectTroopsScriptByRafsafV2ProgressBar");
+    if (progress !== null) {
+        progress.remove();
+    }
     UI.ErrorMessage(String(error), "5000");
-}
+});
