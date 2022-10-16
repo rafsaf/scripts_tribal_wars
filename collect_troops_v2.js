@@ -1,4 +1,4 @@
-/*
+/*!
 MIT License
 
 Copyright (c) 2022 rafal.safin12@gmail.com
@@ -19,18 +19,18 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+SOFTWARE. 
 
 About
 -----
 
 Tool to gather informations about Troops and Defence informations of every
-player in the tribe. When clicked, in the middle of the screen, a "counter"
-with progress appears,then the result in the window. It works in both the
-Army and Defense tabs. The default settings to copy have the cache set to
-true a cacheTime for 5 minutes, during which time the script spits out the
-result saved in the browser instead of flying all the members all over again
-and collecting data. In case of doubt whether we are dealing with a new or
+player in the tribe. When clicked, in the middle of the screen, a "counter" 
+with progress appears,then the result in the window. It works in both the 
+Army and Defense tabs. The default settings to copy have the cache set to 
+true a cacheTime for 5 minutes, during which time the script spits out the 
+result saved in the browser instead of flying all the members all over again 
+and collecting data. In case of doubt whether we are dealing with a new or 
 old result, the date of the generation appears at the bottom.
 
 Configuration
@@ -39,396 +39,75 @@ Configuration
 Configuration takes place by using object "COLLECT_TROOPS_DATA_V2" or for
 legacy purposes if "COLLECT_TROOPS_DATA_V2" is undefined, "Data" var
 will be used. Note every parameter IS OPTIONAL, if both variables are
-undefined or are defined, but there are no keys there, sensible
+undefined or are defined, but there are no keys there, sensible 
 defaults will be used.
 
-- cache: <boolean> (default: true) is responsible for storing the result
-in the browser so as not to accidentally click a few times in a row and
-load the game servers, setting cache: false causes not to store the result
-(eg, when we intend to collect data from two tribes jumping immediately
-to the other). Note if the tribe has huge amount of villages, it may take way
+- cache: <boolean> (default: true) is responsible for storing the result 
+in the browser so as not to accidentally click a few times in a row and 
+load the game servers, setting cache: false causes not to store the result 
+(eg, when we intend to collect data from two tribes jumping immediately 
+to the other). Note if the tribe has huge amount of villages, it may take way 
 too much storage in localStorage (~max 5MB), beacuse of that limit is 1MB,
 if output is > 1MB, save to localStorage will be skipped.
 
-- cacheTime: <number> (default: 5) is the time of storing the result in
+- cacheTime: <number> (default: 5) is the time of storing the result in 
 the browser, in minutes.
 
 - removedPlayers: <string> (default: "") here we enter the nicknames of players
-from whom we do not want to collect troops info, separating with semicolons as in
+from whom we do not want to collect troops info, separating with semicolons as in 
 the messages in game, e.g. "Rafsaf;kmic;someoneelse"
 
-- allowedPlayers: <string> (default: "") here we enter the nicknames of players
-from whom ONLY! (if it's empty, all players in the tribe will be used) we want to
-collect troops info, separating with semicolons as in the messages in game,
+- allowedPlayers: <string> (default: "") here we enter the nicknames of players 
+from whom ONLY! (if it's empty, all players in the tribe will be used) we want to 
+collect troops info, separating with semicolons as in the messages in game, 
 e.g. "Rafsaf;kmic;someoneelse"
 
 - language: <string> (default: "pl") this should be "en" or "pl", if anything
-different is used, script will use english
+different is used, script will use english 
 
-- showNicknamesTroops: <boolean> (default: false) when set to true cause that
+- showNicknamesTroops: <boolean> (default: false) when set to true cause that 
 at each line appears at its beginning additionally the nickname of the player,
 applies only in Troops tab, similar to showNicknamesDeff
 
-- showFirstLineTroops: <boolean> (default: false) when set to true cause that
+- showFirstLineTroops: <boolean> (default: false) when set to true cause that 
 at result additional line at the top will be added, that is specified by
 firstLineDeff variable, applies only in Troops tab, similar to showFirstLineDeff
 
 - firstLineTroops: <string> (default: "") line that will be showed at the result top
-when showFirstLineTroops is true, applies only in Troops tab, similar to
+when showFirstLineTroops is true, applies only in Troops tab, similar to 
 showNicknamesDeff
 
-- showNicknamesDeff: <boolean> (default: false) when set to true cause that
+- showNicknamesDeff: <boolean> (default: false) when set to true cause that 
 at each line appears at its beginning additionally the nickname of the player,
 applies only in Defence tab, similar to showNicknamesTroops
 
-- showFirstLineDeff: <boolean> (default: false) when set to true cause that
+- showFirstLineDeff: <boolean> (default: false) when set to true cause that 
 at result additional line at the top will be added, that is specified by
 firstLineDeff variable, applies only in Defence tab, similar to showFirstLineTroops
 
 - firstLineDeff: <string> (default: "") line that will be showed at the result top
-when showFirstLineTroops is true, applies only in Defence tab, similar
+when showFirstLineTroops is true, applies only in Defence tab, similar 
 to firstLineTroops
 
-*/
-var UI;
-var Dialog;
-var COLLECT_TROOPS_DATA_V2;
-var Data;
-var CT_EN_MESSAGES_V2 = {
-    GO_TO_TRIBE_MEMBERS_TAB: "Error: Go to the Tribe -> Members -> Troops or Defence",
-    EMPTY_PLAYERS_TABLE: "Error: Could not get players from current page!",
-    SCRIPT_NAME_ARMY: "Army Collection",
-    SCRIPT_NAME_DEFF: "Deff Collection",
-    SCRIPT_NAME_WITH_AUTHOR: "Script collect_troops_v2 by Rafsaf",
-    CONFIG_DISABLED_PLAYERS: "Ommited because of script config or complete lack of overview",
-    ATTENTION_PARTIAL_OR_LACK_OVERVIEW: "Ommited because of partial lack of overview",
-    FINAL_SCRAPED_PLAYERS: "Sucessfully collected players",
-    GENERATED: "Generated at",
-    SCRIPT_HELP: "HELP",
-    WAIT: "Wait",
-    NO_PLAYERS_SELECTOR_ON_PAGE: "Fatal error: Could not find html selector with players, hCaptcha bot protection?",
-    CRITICAL_ERROR_HCAPTCHA: "Fatal error: No player page table selector, hCaptcha bot protection?",
-};
-var CT_PL_MESSAGES_V2 = {
-    GO_TO_TRIBE_MEMBERS_TAB: "Błąd: Przejdź do Plemię -> Członkowie -> Wojska/Obrona",
-    EMPTY_PLAYERS_TABLE: "Błąd: Brak graczy na obecnej stronie!",
-    SCRIPT_NAME_ARMY: "Zbiórka Wojska",
-    SCRIPT_NAME_DEFF: "Zbiórka Deffa",
-    SCRIPT_NAME_WITH_AUTHOR: "Skrypt collect_troops_v2 by Rafsaf",
-    CONFIG_DISABLED_PLAYERS: "Pominięci przez ustawienia skryptu lub całkowity brak dostępu",
-    ATTENTION_PARTIAL_OR_LACK_OVERVIEW: "Pominięci przez częściowy dostęp do przeglądu",
-    GENERATED: "Wygenerowano",
-    FINAL_SCRAPED_PLAYERS: "Pomyślnie zebrany przegląd",
-    WAIT: "Czekaj",
-    SCRIPT_HELP: "POMOC",
-    NO_PLAYERS_SELECTOR_ON_PAGE: "Błąd krytyczny: Nie istnieje selektor z listą graczy, ochrona botowa hCaptcha?",
-    CRITICAL_ERROR_HCAPTCHA: "Błąd krytyczny: Brak tabeli na stronie gracza, ochrona botowa hCaptcha?",
-};
-var collectTroopsScriptByRafsafV2 = async () => {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
-    const players = [];
-    const lackOfAccessPlayers = [];
-    const params = new URLSearchParams(location.search);
-    let output = "";
-    let tribeName = "";
-    const scriptMode = params.get("mode");
-    const scriptModeTroops = () => {
-        return scriptMode === "members_troops";
-    };
-    const scriptModeDefence = () => {
-        return scriptMode === "members_defense";
-    };
-    const userConfig = (_b = (_a = COLLECT_TROOPS_DATA_V2 !== null && COLLECT_TROOPS_DATA_V2 !== void 0 ? COLLECT_TROOPS_DATA_V2 : undefined) !== null && _a !== void 0 ? _a : Data) !== null && _b !== void 0 ? _b : {};
-    const language = (_c = userConfig.language) !== null && _c !== void 0 ? _c : "pl";
-    const I18N = language === "pl" ? CT_PL_MESSAGES_V2 : CT_EN_MESSAGES_V2;
-    const scriptConfig = {
-        cache: (_d = userConfig.cache) !== null && _d !== void 0 ? _d : true,
-        cacheTime: (_e = userConfig.cacheTime) !== null && _e !== void 0 ? _e : 5,
-        removedPlayers: userConfig.removedPlayers
-            ? userConfig.removedPlayers.split(";")
-            : [],
-        allowedPlayers: userConfig.allowedPlayers
-            ? userConfig.allowedPlayers.split(";")
-            : [],
-        showFirstLine: scriptModeTroops()
-            ? (_f = userConfig.showFirstLineTroops) !== null && _f !== void 0 ? _f : false
-            : (_g = userConfig.showFirstLineDeff) !== null && _g !== void 0 ? _g : false,
-        showNicknames: scriptModeTroops()
-            ? (_h = userConfig.showNicknamesTroops) !== null && _h !== void 0 ? _h : false
-            : (_j = userConfig.showNicknamesDeff) !== null && _j !== void 0 ? _j : false,
-        scriptName: scriptModeTroops()
-            ? I18N.SCRIPT_NAME_ARMY
-            : I18N.SCRIPT_NAME_DEFF,
-        firstLine: scriptModeTroops()
-            ? (_k = userConfig.firstLineTroops) !== null && _k !== void 0 ? _k : ""
-            : (_l = userConfig.firstLineTroops) !== null && _l !== void 0 ? _l : "",
-        villagesPerPage: scriptModeTroops() ? 1000 : 2000,
-        language: language,
-    };
-    console.log("start collectTroopsScriptByRafsafV2 with config:", scriptConfig);
-    // Check url location
-    if (params.get("screen") !== "ally" ||
-        (!scriptModeDefence() && !scriptModeTroops())) {
-        UI.ErrorMessage(I18N.GO_TO_TRIBE_MEMBERS_TAB, "3000");
-        return;
-    }
-    // Adds players from current html to get array with players nicknames and ids
-    const playersTableElement = document.querySelector("#ally_content .input-nicer");
-    if (playersTableElement === null) {
-        UI.ErrorMessage(I18N.NO_PLAYERS_SELECTOR_ON_PAGE, "4000");
-        return;
-    }
-    for (let playerElement of Array.from(playersTableElement)) {
-        if (playerElement.hidden || playerElement instanceof HTMLOptGroupElement) {
-            continue;
-        }
-        players.push({
-            id: playerElement.value,
-            nick: playerElement.text.trim(),
-            disabled: playerElement.disabled,
-        });
-    }
-    if (players.length === 0) {
-        UI.ErrorMessage(I18N.EMPTY_PLAYERS_TABLE, "4000");
-        return;
-    }
-    // Get tribe name from current html
-    const membersHTMLElement = document.getElementById("content_value");
-    if (membersHTMLElement !== null) {
-        const tribeH2Element = membersHTMLElement.querySelector("h2");
-        if (tribeH2Element !== null) {
-            tribeName = (_m = tribeH2Element.textContent) !== null && _m !== void 0 ? _m : "";
-            const tribeLevelInName = tribeName.indexOf("(");
-            if (tribeLevelInName !== -1) {
-                tribeName = tribeName.slice(0, tribeLevelInName).trim();
-            }
-        }
-    }
-    // Uses some methods to get all stuff from table with units from current html player page
-    const AddPlayerPageToOutput = (playerPageDocument, player) => {
-        const tableRows = playerPageDocument.querySelectorAll(".table-responsive .vis tr");
-        let noAccess = false;
-        let playerOutputTroops = "";
-        let coord = "";
-        let villages = 0;
-        if (tableRows.length === 0) {
-            throw I18N.CRITICAL_ERROR_HCAPTCHA;
-        }
-        tableRows.forEach((oneVillageNode, rowIndex) => {
-            if (rowIndex === 0) {
-                return;
-            }
-            villages += 1;
-            if (output !== "" || playerOutputTroops !== "") {
-                playerOutputTroops += "\r\n";
-            }
-            if (scriptConfig.showNicknames) {
-                playerOutputTroops += player.nick + ",";
-            }
-            let unitRow = oneVillageNode.querySelectorAll("td");
-            unitRow.forEach((col, colIndex) => {
-                let value = String(col.innerHTML).trim();
-                if (value === "?") {
-                    noAccess = true;
-                }
-                if (colIndex === 0) {
-                    if (value.includes("|")) {
-                        value = value.split("").reverse().join("");
-                        const coordIndex1 = value.search("[)]");
-                        const coordIndex2 = value.search("[(]");
-                        value = value.slice(coordIndex1 + 1, coordIndex2);
-                        value = value.split("").reverse().join("");
-                        coord = value;
-                    }
-                    else {
-                        playerOutputTroops += coord + ",";
-                    }
-                }
-                playerOutputTroops += value + ",";
-            });
-        });
-        if (noAccess) {
-            lackOfAccessPlayers.push(player);
-            return 0;
-        }
-        else {
-            output += playerOutputTroops;
-            return villages;
-        }
-    };
-    // To add player_id to current path
-    const getPlayerURL = (playerId, pageNumber) => {
-        const urlParams = new URLSearchParams(location.search);
-        urlParams.set("player_id", playerId);
-        urlParams.set("page", String(pageNumber));
-        return `${window.location.origin}${window.location.pathname}?${urlParams.toString()}`;
-    };
-    // Used to parse string from fetch func to html
-    const ConvertToHTML = (pageText) => {
-        const parser = new DOMParser();
-        const playerPageDocument = parser.parseFromString(pageText, "text/html");
-        return playerPageDocument.body;
-    };
-    // 1. If cacheTime smaller than actual time, use localStorage output.
-    // 3. Loop over players with access.
-    // 3.1 Fetch a player page.
-    // 3.2 Add his troops to output.
-    // 4. Add results to localStorage.
-    // 5. Dialog with results.
-    async function RenderPlayerTroops() {
-        const cacheKey = `collectTroopsScriptByRafsafV2:${scriptMode}`;
-        const cacheItem = window.localStorage.getItem(cacheKey);
-        let result;
-        let cachedResult = null;
-        let notDisabledPlayers = [];
-        let finalPlayers = [];
-        let disabledPlayers = [];
-        if (cacheItem !== null) {
-            cachedResult = JSON.parse(cacheItem);
-            if (cachedResult !== null) {
-                if (new Date().getTime() >= cachedResult.expiresAt ||
-                    !scriptConfig.cache) {
-                    cachedResult = null;
-                }
-            }
-        }
-        if (cachedResult !== null) {
-            result = cachedResult;
-        }
-        else {
-            if (scriptConfig.allowedPlayers.length === 0) {
-                notDisabledPlayers = players.filter((player) => {
-                    return (!player.disabled &&
-                        !scriptConfig.removedPlayers.includes(player.nick));
-                });
-            }
-            else {
-                notDisabledPlayers = players.filter((player) => {
-                    return (!player.disabled &&
-                        scriptConfig.allowedPlayers.includes(player.nick) &&
-                        !scriptConfig.removedPlayers.includes(player.nick));
-                });
-            }
-            const newProgressBar = (progressNumber) => {
-                return `
+*///!
+var UI,Dialog,COLLECT_TROOPS_DATA_V2,Data,CT_EN_MESSAGES_V2={GO_TO_TRIBE_MEMBERS_TAB:"Error: Go to the Tribe -> Members -> Troops or Defence",EMPTY_PLAYERS_TABLE:"Error: Could not get players from current page!",SCRIPT_NAME_ARMY:"Army Collection",SCRIPT_NAME_DEFF:"Deff Collection",SCRIPT_NAME_WITH_AUTHOR:"Script collect_troops_v2 by Rafsaf",CONFIG_DISABLED_PLAYERS:"Ommited because of script config or complete lack of overview",ATTENTION_PARTIAL_OR_LACK_OVERVIEW:"Ommited because of partial lack of overview",FINAL_SCRAPED_PLAYERS:"Sucessfully collected players",GENERATED:"Generated at",SCRIPT_HELP:"HELP",WAIT:"Wait",NO_PLAYERS_SELECTOR_ON_PAGE:"Fatal error: Could not find html selector with players, hCaptcha bot protection?",CRITICAL_ERROR_HCAPTCHA:"Fatal error: No player page table selector, hCaptcha bot protection?"},CT_PL_MESSAGES_V2={GO_TO_TRIBE_MEMBERS_TAB:"B\u0142\u0105d: Przejd\u017A do Plemi\u0119 -> Cz\u0142onkowie -> Wojska/Obrona",EMPTY_PLAYERS_TABLE:"B\u0142\u0105d: Brak graczy na obecnej stronie!",SCRIPT_NAME_ARMY:"Zbi\xF3rka Wojska",SCRIPT_NAME_DEFF:"Zbi\xF3rka Deffa",SCRIPT_NAME_WITH_AUTHOR:"Skrypt collect_troops_v2 by Rafsaf",CONFIG_DISABLED_PLAYERS:"Pomini\u0119ci przez ustawienia skryptu lub ca\u0142kowity brak dost\u0119pu",ATTENTION_PARTIAL_OR_LACK_OVERVIEW:"Pomini\u0119ci przez cz\u0119\u015Bciowy dost\u0119p do przegl\u0105du",GENERATED:"Wygenerowano",FINAL_SCRAPED_PLAYERS:"Pomy\u015Blnie zebrany przegl\u0105d",WAIT:"Czekaj",SCRIPT_HELP:"POMOC",NO_PLAYERS_SELECTOR_ON_PAGE:"B\u0142\u0105d krytyczny: Nie istnieje selektor z list\u0105 graczy, ochrona botowa hCaptcha?",CRITICAL_ERROR_HCAPTCHA:"B\u0142\u0105d krytyczny: Brak tabeli na stronie gracza, ochrona botowa hCaptcha?"},collectTroopsScriptByRafsafV2=async()=>{var C,I,w,N,O,M,D,k,v,B,H,W;const f=[],E=[],h=new URLSearchParams(location.search);let m="",P="";const y=h.get("mode"),d=()=>y==="members_troops",$=()=>y==="members_defense";console.log("dss");const o=(I=(C=COLLECT_TROOPS_DATA_V2!=null?COLLECT_TROOPS_DATA_V2:void 0)!=null?C:Data)!=null?I:{},S=(w=o.language)!=null?w:"pl",l=S==="pl"?CT_PL_MESSAGES_V2:CT_EN_MESSAGES_V2,n={cache:(N=o.cache)!=null?N:!0,cacheTime:(O=o.cacheTime)!=null?O:5,removedPlayers:o.removedPlayers?o.removedPlayers.split(";"):[],allowedPlayers:o.allowedPlayers?o.allowedPlayers.split(";"):[],showFirstLine:d()?(M=o.showFirstLineTroops)!=null?M:!1:(D=o.showFirstLineDeff)!=null?D:!1,showNicknames:d()?(k=o.showNicknamesTroops)!=null?k:!1:(v=o.showNicknamesDeff)!=null?v:!1,scriptName:d()?l.SCRIPT_NAME_ARMY:l.SCRIPT_NAME_DEFF,firstLine:d()?(B=o.firstLineTroops)!=null?B:"":(H=o.firstLineTroops)!=null?H:"",villagesPerPage:d()?1e3:2e3,language:S};if(console.log("start collectTroopsScriptByRafsafV2 with config:",n),h.get("screen")!=="ally"||!$()&&!d()){UI.ErrorMessage(l.GO_TO_TRIBE_MEMBERS_TAB,"3000");return}const L=document.querySelector("#ally_content .input-nicer");if(L===null){UI.ErrorMessage(l.NO_PLAYERS_SELECTOR_ON_PAGE,"4000");return}for(let s of Array.from(L))s.hidden||s instanceof HTMLOptGroupElement||f.push({id:s.value,nick:s.text.trim(),disabled:s.disabled});if(f.length===0){UI.ErrorMessage(l.EMPTY_PLAYERS_TABLE,"4000");return}const b=document.getElementById("content_value");if(b!==null){const s=b.querySelector("h2");if(s!==null){P=(W=s.textContent)!=null?W:"";const c=P.indexOf("(");c!==-1&&(P=P.slice(0,c).trim())}}const F=(s,c)=>{const t=s.querySelectorAll(".table-responsive .vis tr");let T=!1,i="",u="",_=0;if(t.length===0)throw l.CRITICAL_ERROR_HCAPTCHA;return t.forEach((g,r)=>{if(r===0)return;_+=1,(m!==""||i!=="")&&(i+=`\r
+`),n.showNicknames&&(i+=c.nick+","),g.querySelectorAll("td").forEach((e,p)=>{let a=String(e.innerHTML).trim();if(a==="?"&&(T=!0),p===0)if(a.includes("|")){a=a.split("").reverse().join("");const x=a.search("[)]"),R=a.search("[(]");a=a.slice(x+1,R),a=a.split("").reverse().join(""),u=a}else i+=u+",";i+=a+","})}),T?(E.push(c),0):(m+=i,_)},z=(s,c)=>{const t=new URLSearchParams(location.search);return t.set("player_id",s),t.set("page",String(c)),`${window.location.origin}${window.location.pathname}?${t.toString()}`},Y=s=>new DOMParser().parseFromString(s,"text/html").body;async function G(){const s=`collectTroopsScriptByRafsafV2:${y}`,c=window.localStorage.getItem(s);let t,T=null,i=[],u=[],_=[];if(c!==null&&(T=JSON.parse(c),T!==null&&(new Date().getTime()>=T.expiresAt||!n.cache)&&(T=null)),T!==null)t=T;else{n.allowedPlayers.length===0?i=f.filter(e=>!e.disabled&&!n.removedPlayers.includes(e.nick)):i=f.filter(e=>!e.disabled&&n.allowedPlayers.includes(e.nick)&&!n.removedPlayers.includes(e.nick));const g=e=>`
         <h1 style="margin-top:10px;font-size:40px">
-        ${progressNumber}/${notDisabledPlayers.length}
+        ${e}/${i.length}
         </h1>
-        <h1>${I18N.WAIT}...</h1>
-        `;
-            };
-            const progress = document.createElement("div");
-            progress.setAttribute("id", "collectTroopsScriptByRafsafV2ProgressBar");
-            progress.style.width = "300px";
-            progress.style.height = "200px";
-            progress.style.position = "absolute";
-            progress.style.background = "#f4e4bc";
-            progress.style.margin = "auto";
-            progress.style.color = "#803000";
-            progress.style.top = "0";
-            progress.style.bottom = "20%";
-            progress.style.left = "0";
-            progress.style.right = "0";
-            progress.style.border = "5px solid #804000";
-            progress.style.textAlign = "center";
-            progress.style.fontSize = "40px";
-            progress.innerHTML = newProgressBar(0);
-            document.body.appendChild(progress);
-            let playerCounter = 1;
-            for (let player of notDisabledPlayers) {
-                let currentPage = 1;
-                let addedVillages = 0;
-                while ((currentPage - 1) * scriptConfig.villagesPerPage ===
-                    addedVillages) {
-                    progress.innerHTML = newProgressBar(playerCounter);
-                    const response = await fetch(getPlayerURL(player.id, currentPage));
-                    const html = await response.text();
-                    const playerPageDocument = ConvertToHTML(html);
-                    addedVillages += AddPlayerPageToOutput(playerPageDocument, player);
-                    console.info(`${player.nick} page ${currentPage} villages: ${addedVillages}`);
-                    currentPage += 1;
-                    await new Promise((resolve) => setTimeout(resolve, 300));
-                }
-                playerCounter += 1;
-            }
-            progress.remove();
-            finalPlayers = notDisabledPlayers.filter((player) => {
-                return !lackOfAccessPlayers.includes(player);
-            });
-            disabledPlayers = players.filter((player) => {
-                return (!lackOfAccessPlayers.includes(player) &&
-                    !finalPlayers.includes(player));
-            });
-            result = {
-                output: output,
-                generatedAt: new Date().getTime(),
-                expiresAt: new Date().getTime() + scriptConfig.cacheTime * 60 * 1000,
-                tribeName: tribeName,
-                finalPlayers: finalPlayers,
-                disabledPlayers: disabledPlayers,
-                lackOfAccessPlayers: lackOfAccessPlayers,
-            };
-            if (!scriptConfig.cache) {
-                console.log("script cache not enabled, skipping save to localStorage");
-            }
-            else {
-                try {
-                    // take up to 1MB of localStorage space, modern browsers have maximum 5MB
-                    const resultString = JSON.stringify(result);
-                    const resultSize = new Blob([resultString]).size;
-                    // result in bytes
-                    if (resultSize <= 1048576) {
-                        localStorage.setItem(cacheKey, resultString);
-                        console.log("result saved to localStorage, size in bytes", resultSize);
-                    }
-                    else {
-                        console.warn("size of result in bytes more than 1MB, skipping save in localStorage", resultSize);
-                    }
-                }
-                catch (error) {
-                    console.warn("could not save result of script to localStorage", error);
-                }
-            }
-        }
-        Dialog.show("collectTroopsScriptByRafsafV2ResultDialog", `
-        <h3 style="width:600px;">${scriptConfig.scriptName}: ${result.tribeName}</h3>
-        ${result.finalPlayers.length === 0
-            ? ``
-            : `<h4>${I18N.FINAL_SCRAPED_PLAYERS}:</h4><p>${result.finalPlayers
-                .map((player) => {
-                return player.nick;
-            })
-                .join(";")}</p>`}
-        ${result.disabledPlayers.length === 0
-            ? ``
-            : `<h4>${I18N.CONFIG_DISABLED_PLAYERS}:</h4><p>${result.disabledPlayers
-                .map((player) => {
-                return player.nick;
-            })
-                .join(";")}</p>`}
-        ${result.lackOfAccessPlayers.length === 0
-            ? ``
-            : `<h4>${I18N.ATTENTION_PARTIAL_OR_LACK_OVERVIEW}:</h4><p>${result.lackOfAccessPlayers
-                .map((player) => {
-                return player.nick;
-            })
-                .join(";")}</p>`}
-        <textarea rows="15" style="width:95%;margin-top:15px;margin-bottom:25px;">${scriptConfig.showFirstLine ? scriptConfig.firstLine + "\r\n" : ""}${result.output}</textarea>
+        <h1>${l.WAIT}...</h1>
+        `,r=document.createElement("div");r.setAttribute("id","collectTroopsScriptByRafsafV2ProgressBar"),r.style.width="300px",r.style.height="200px",r.style.position="absolute",r.style.background="#f4e4bc",r.style.margin="auto",r.style.color="#803000",r.style.top="0",r.style.bottom="20%",r.style.left="0",r.style.right="0",r.style.border="5px solid #804000",r.style.textAlign="center",r.style.fontSize="40px",r.innerHTML=g(0),document.body.appendChild(r);let A=1;for(let e of i){let p=1,a=0;for(;(p-1)*n.villagesPerPage===a;){r.innerHTML=g(A);const R=await(await fetch(z(e.id,p))).text(),V=Y(R);a+=F(V,e),console.info(`${e.nick} page ${p} villages: ${a}`),p+=1,await new Promise(j=>setTimeout(j,300))}A+=1}if(r.remove(),u=i.filter(e=>!E.includes(e)),_=f.filter(e=>!E.includes(e)&&!u.includes(e)),t={output:m,generatedAt:new Date().getTime(),expiresAt:new Date().getTime()+n.cacheTime*60*1e3,tribeName:P,finalPlayers:u,disabledPlayers:_,lackOfAccessPlayers:E},!n.cache)console.log("script cache not enabled, skipping save to localStorage");else try{const e=JSON.stringify(t),p=new Blob([e]).size;p<=1048576?(localStorage.setItem(s,e),console.log("result saved to localStorage, size in bytes",p)):console.warn("size of result in bytes more than 1MB, skipping save in localStorage",p)}catch(e){console.warn("could not save result of script to localStorage",e)}}Dialog.show("collectTroopsScriptByRafsafV2ResultDialog",`
+        <h3 style="width:600px;">${n.scriptName}: ${t.tribeName}</h3>
+        ${t.finalPlayers.length===0?"":`<h4>${l.FINAL_SCRAPED_PLAYERS}:</h4><p>${t.finalPlayers.map(g=>g.nick).join(";")}</p>`}
+        ${t.disabledPlayers.length===0?"":`<h4>${l.CONFIG_DISABLED_PLAYERS}:</h4><p>${t.disabledPlayers.map(g=>g.nick).join(";")}</p>`}
+        ${t.lackOfAccessPlayers.length===0?"":`<h4>${l.ATTENTION_PARTIAL_OR_LACK_OVERVIEW}:</h4><p>${t.lackOfAccessPlayers.map(g=>g.nick).join(";")}</p>`}
+        <textarea rows="15" style="width:95%;margin-top:15px;margin-bottom:25px;">${n.showFirstLine?n.firstLine+`\r
+`:""}${t.output}</textarea>
         <p style="text-align:right; margin:2px">
-        <small>${I18N.SCRIPT_NAME_WITH_AUTHOR}</small>
+        <small>${l.SCRIPT_NAME_WITH_AUTHOR}</small>
         <p style="text-align:right; margin:2px">
-        <small>${I18N.GENERATED} ${new Date(result.generatedAt).toLocaleString()}</small></p>
+        <small>${l.GENERATED} ${new Date(t.generatedAt).toLocaleString()}</small></p>
         <p style="text-align:right; margin:2px">
-        <a target="_blank" rel="noopener" href="https://forum.plemiona.pl/index.php?threads/zbi%C3%B3rka-wojska-i-obrony.128630/">${I18N.SCRIPT_HELP}</a>
+        <a target="_blank" rel="noopener" href="https://forum.plemiona.pl/index.php?threads/zbi%C3%B3rka-wojska-i-obrony.128630/">${l.SCRIPT_HELP}</a>
         </p>
-        `);
-    }
-    await RenderPlayerTroops();
-};
-collectTroopsScriptByRafsafV2().catch((error) => {
-    const progress = document.getElementById("collectTroopsScriptByRafsafV2ProgressBar");
-    if (progress !== null) {
-        progress.remove();
-    }
-    UI.ErrorMessage(String(error), "5000");
-});
+        `)}await G()};collectTroopsScriptByRafsafV2().catch(f=>{const E=document.getElementById("collectTroopsScriptByRafsafV2ProgressBar");E!==null&&E.remove(),UI.ErrorMessage(String(f),"5000")});
