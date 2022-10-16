@@ -45,8 +45,10 @@ defaults will be used.
 - cache: <boolean> (default: true) is responsible for storing the result 
 in the browser so as not to accidentally click a few times in a row and 
 load the game servers, setting cache: false causes not to store the result 
-(eg, when we intend to collect data from two members jumping immediately 
-to the other).
+(eg, when we intend to collect data from two tribes jumping immediately 
+to the other). Note if the tribe has huge amount of villages, it may take way 
+too much storage in localStorage (~max 5MB), beacuse of that limit is 1MB,
+if output is > 1MB, save to localStorage will be skipped.
 
 - cacheTime: <number> (default: 5) is the time of storing the result in 
 the browser, in minutes.
@@ -494,11 +496,11 @@ var collectTroopsScriptByRafsafV2 = async () => {
           const resultSize = new Blob([resultString]).size;
           // result in bytes
           if (resultSize <= 1048576) {
+            localStorage.setItem(cacheKey, resultString);
             console.log(
               "result saved to localStorage, size in bytes",
               resultSize
             );
-            localStorage.setItem(cacheKey, resultString);
           } else {
             console.warn(
               "size of result in bytes more than 1MB, skipping save in localStorage",
