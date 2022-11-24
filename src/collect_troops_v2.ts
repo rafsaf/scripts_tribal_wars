@@ -136,6 +136,7 @@ interface I18nLanguageMessages {
   SCRIPT_NAME_WITH_AUTHOR: string;
   SCRIPT_HELP: string;
   CONFIG_DISABLED_PLAYERS: string;
+  EMPTY_RESULT_PLAYERS: string;
   FINAL_SCRAPED_PLAYERS: string;
   ATTENTION_PARTIAL_OR_LACK_OVERVIEW: string;
   GENERATED: string;
@@ -153,6 +154,7 @@ interface localStorageResult {
   finalPlayers: TWPlayer[];
   disabledPlayers: TWPlayer[];
   lackOfAccessPlayers: TWPlayer[];
+  emptyResultPlayers: TWPlayer[];
 }
 
 var UI: TribalWarsUI;
@@ -169,6 +171,7 @@ var CT_EN_MESSAGES_V2: I18nLanguageMessages = {
   SCRIPT_NAME_WITH_AUTHOR: "Script collect_troops_v2 by Rafsaf",
   CONFIG_DISABLED_PLAYERS:
     "Ommited because of script config or complete lack of overview",
+  EMPTY_RESULT_PLAYERS: "Ommited because of empty result",
   ATTENTION_PARTIAL_OR_LACK_OVERVIEW:
     "Ommited because of partial lack of overview",
   FINAL_SCRAPED_PLAYERS: "Sucessfully collected players",
@@ -189,6 +192,7 @@ var CT_PL_MESSAGES_V2: I18nLanguageMessages = {
   SCRIPT_NAME_WITH_AUTHOR: "Skrypt collect_troops_v2 by Rafsaf",
   CONFIG_DISABLED_PLAYERS:
     "Pominięci przez ustawienia skryptu lub całkowity brak dostępu",
+  EMPTY_RESULT_PLAYERS: "Pominięci z powodu pustego wyniku zbiórki",
   ATTENTION_PARTIAL_OR_LACK_OVERVIEW:
     "Pominięci przez częściowy dostęp do przeglądu",
   GENERATED: "Wygenerowano",
@@ -203,6 +207,7 @@ var CT_PL_MESSAGES_V2: I18nLanguageMessages = {
 
 var collectTroopsScriptByRafsafV2 = async () => {
   const players: TWPlayer[] = [];
+  const emptyResultPlayers: TWPlayer[] = [];
   const lackOfAccessPlayers: TWPlayer[] = [];
   const params = new URLSearchParams(location.search);
   let output: string = "";
@@ -215,7 +220,6 @@ var collectTroopsScriptByRafsafV2 = async () => {
   const scriptModeDefence = () => {
     return scriptMode === "members_defense";
   };
-  console.log("dss");
 
   const userConfig: CollectTroopsDataConfig =
     COLLECT_TROOPS_DATA_V2 ?? undefined ?? Data ?? {};
@@ -309,7 +313,8 @@ var collectTroopsScriptByRafsafV2 = async () => {
     let coord = "";
     let villages = 0;
     if (tableRows.length === 0) {
-      throw I18N.CRITICAL_ERROR_HCAPTCHA;
+      emptyResultPlayers.push(player);
+      return 0;
     }
     tableRows.forEach((oneVillageNode, rowIndex) => {
       if (rowIndex === 0) {
@@ -469,12 +474,16 @@ var collectTroopsScriptByRafsafV2 = async () => {
       progress.remove();
 
       finalPlayers = notDisabledPlayers.filter((player) => {
-        return !lackOfAccessPlayers.includes(player);
+        return (
+          !lackOfAccessPlayers.includes(player) &&
+          !emptyResultPlayers.includes(player)
+        );
       });
       disabledPlayers = players.filter((player) => {
         return (
           !lackOfAccessPlayers.includes(player) &&
-          !finalPlayers.includes(player)
+          !finalPlayers.includes(player) &&
+          !emptyResultPlayers.includes(player)
         );
       });
 
@@ -486,6 +495,7 @@ var collectTroopsScriptByRafsafV2 = async () => {
         finalPlayers: finalPlayers,
         disabledPlayers: disabledPlayers,
         lackOfAccessPlayers: lackOfAccessPlayers,
+        emptyResultPlayers: emptyResultPlayers,
       };
 
       if (!scriptConfig.cache) {
@@ -549,6 +559,17 @@ var collectTroopsScriptByRafsafV2 = async () => {
             : `<h4>${
                 I18N.ATTENTION_PARTIAL_OR_LACK_OVERVIEW
               }:</h4><p>${result.lackOfAccessPlayers
+                .map((player) => {
+                  return player.nick;
+                })
+                .join(";")}</p>`
+        }
+        ${
+          result.emptyResultPlayers.length === 0
+            ? ``
+            : `<h4>${
+                I18N.EMPTY_RESULT_PLAYERS
+              }:</h4><p>${result.emptyResultPlayers
                 .map((player) => {
                   return player.nick;
                 })
