@@ -90,6 +90,27 @@ firstLineDeff variable, applies only in Defence tab, similar to showFirstLineTro
 when showFirstLineTroops is true, applies only in Defence tab, similar 
 to firstLineTroops
 
+Usage
+-----
+
+Using as a script for the bar:
+
+javascript: var COLLECT_TROOPS_DATA_V2 = {
+    cache: true,
+    cacheTime: 5,
+    removedPlayers: "",
+    allowedPlayers: "",
+    firstLineTroops: "",
+    showFirstLineTroops: false,
+    showNicknamesTroops: false,
+    firstLineDeff: "",
+    showFirstLineDeff: false,
+    showNicknamesDeff: false,
+    language: "en",
+};
+$.getScript("official-inngames-cdn-url-where-script-is-hosted");
+void 0;
+
 */ //!
 interface TribalWarsUI {
   ErrorMessage: (message: string, showTime: string) => void;
