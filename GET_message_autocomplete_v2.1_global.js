@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         GET message autocomplete
-// @version      3.0-global
+// @version      2.1-global
 // @author       Rafał Safin <rafal.safin@rafsaf.pl>
-// @source       https://github.com/rafsaf/scripts_tribal_wars/blob/master/public/GET_message_autocomplete_v3.js
+// @source       https://github.com/rafsaf/scripts_tribal_wars/blob/master/public/GET_message_autocomplete_v2.1_global.js
 // @copyright    MIT
 // @description  Autocomplete messages in tribal wars mail form with GET parameters of URL
 // @grant        none
