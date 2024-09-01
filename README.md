@@ -40,6 +40,24 @@ $.getScript("https://rafsaf.github.io/scripts_tribal_wars/collect_troops_v2.js")
 void 0;
 ```
 
+```js
+javascript: var COLLECT_TROOPS_DATA_V3 = {
+  cache: true,
+  cacheTime: 5,
+  removedPlayers: "",
+  allowedPlayers: "",
+  firstLineTroops: "",
+  showFirstLineTroops: false,
+  showNicknamesTroops: false,
+  firstLineDeff: "",
+  showFirstLineDeff: false,
+  showNicknamesDeff: false,
+  language: "en"
+};
+$.getScript("https://rafsaf.github.io/scripts_tribal_wars/collect_troops_v3.js");
+void 0;
+```
+
 JS version of the scripts compiled using command:
 
 ```bash
