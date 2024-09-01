@@ -36,25 +36,7 @@ javascript: var COLLECT_TROOPS_DATA_V2 = {
   showNicknamesDeff: false,
   language: "en"
 };
-$.getScript("https://rafsaf.github.io/scripts_tribal_wars/collect_troops_v2.js");
-void 0;
-```
-
-```js
-javascript: var COLLECT_TROOPS_DATA_V3 = {
-  cache: true,
-  cacheTime: 5,
-  removedPlayers: "",
-  allowedPlayers: "",
-  firstLineTroops: "",
-  showFirstLineTroops: false,
-  showNicknamesTroops: false,
-  firstLineDeff: "",
-  showFirstLineDeff: false,
-  showNicknamesDeff: false,
-  language: "en"
-};
-$.getScript("https://rafsaf.github.io/scripts_tribal_wars/collect_troops_v3.js");
+$.getScript("https://rafsaf.github.io/scripts_tribal_wars/collect_troops_v2.1.js");
 void 0;
 ```
 

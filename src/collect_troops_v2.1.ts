@@ -2,7 +2,7 @@
 MIT License
 
 Copyright (c) 2022 rafal.safin12@gmail.com
-Source https://github.com/rafsaf/scripts_tribal_wars/blob/master/src/collect_troops_v3.ts
+Source https://github.com/rafsaf/scripts_tribal_wars/blob/master/src/collect_troops_v2.1.ts
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -37,8 +37,8 @@ old result, the date of the generation appears at the bottom.
 Configuration
 -------------
 
-Configuration takes place by using object "COLLECT_TROOPS_DATA_V3" or for
-legacy purposes if "COLLECT_TROOPS_DATA_V3" is undefined, "Data" var
+Configuration takes place by using object "COLLECT_TROOPS_DATA_V2" or for
+legacy purposes if "COLLECT_TROOPS_DATA_V2" is undefined, "Data" var
 will be used. Note every parameter IS OPTIONAL, if both variables are
 undefined or are defined, but there are no keys there, sensible 
 defaults will be used.
@@ -180,16 +180,16 @@ interface localStorageResult {
 
 var UI: TribalWarsUI;
 var Dialog: TribalWarsDialog;
-var COLLECT_TROOPS_DATA_V3: CollectTroopsDataConfig | undefined;
+var COLLECT_TROOPS_DATA_V2: CollectTroopsDataConfig | undefined;
 var Data: CollectTroopsDataConfig | undefined;
 
-var CT_EN_MESSAGES_V3: I18nLanguageMessages = {
+var CT_EN_MESSAGES_V2: I18nLanguageMessages = {
   GO_TO_TRIBE_MEMBERS_TAB:
     "Error: Go to the Tribe -> Members -> Troops or Defence",
   EMPTY_PLAYERS_TABLE: "Error: Could not get players from current page!",
   SCRIPT_NAME_ARMY: "Army Collection",
   SCRIPT_NAME_DEFF: "Deff Collection",
-  SCRIPT_NAME_WITH_AUTHOR: "Script collect_troops_V3 by Rafsaf",
+  SCRIPT_NAME_WITH_AUTHOR: "Script collect_troops_V2 by Rafsaf",
   CONFIG_DISABLED_PLAYERS:
     "Ommited because of script config or complete lack of overview",
   EMPTY_RESULT_PLAYERS: "Ommited because of empty result",
@@ -203,13 +203,13 @@ var CT_EN_MESSAGES_V3: I18nLanguageMessages = {
   CRITICAL_ERROR_HCAPTCHA:
     "Fatal error: No player page table selector, hCaptcha bot protection?",
 };
-var CT_PL_MESSAGES_V3: I18nLanguageMessages = {
+var CT_PL_MESSAGES_V2: I18nLanguageMessages = {
   GO_TO_TRIBE_MEMBERS_TAB:
     "Błąd: Przejdź do Plemię -> Członkowie -> Wojska/Obrona",
   EMPTY_PLAYERS_TABLE: "Błąd: Brak graczy na obecnej stronie!",
   SCRIPT_NAME_ARMY: "Zbiórka Wojska",
   SCRIPT_NAME_DEFF: "Zbiórka Deffa",
-  SCRIPT_NAME_WITH_AUTHOR: "Skrypt collect_troops_V3 by Rafsaf",
+  SCRIPT_NAME_WITH_AUTHOR: "Skrypt collect_troops_V2 by Rafsaf",
   CONFIG_DISABLED_PLAYERS:
     "Pominięci przez ustawienia skryptu lub całkowity brak dostępu",
   EMPTY_RESULT_PLAYERS: "Pominięci z powodu pustego wyniku zbiórki",
@@ -223,14 +223,14 @@ var CT_PL_MESSAGES_V3: I18nLanguageMessages = {
   CRITICAL_ERROR_HCAPTCHA:
     "Błąd krytyczny: Brak tabeli na stronie gracza, ochrona botowa hCaptcha?",
 };
-var CT_DE_MESSAGES_V3: I18nLanguageMessages = {
+var CT_DE_MESSAGES_V2: I18nLanguageMessages = {
   GO_TO_TRIBE_MEMBERS_TAB:
     "Fehler: Gehe zu Stamm -> Mitglieder -> Truppen oder Verteidigung",
   EMPTY_PLAYERS_TABLE:
     "Fehler: Konnte keine Spieler von der aktuellen Seite abrufen!",
   SCRIPT_NAME_ARMY: "Truppensammlung",
   SCRIPT_NAME_DEFF: "Verteidigungssammlung",
-  SCRIPT_NAME_WITH_AUTHOR: "Skript collect_troops_V3 von Rafsaf",
+  SCRIPT_NAME_WITH_AUTHOR: "Skript collect_troops_V2 von Rafsaf",
   CONFIG_DISABLED_PLAYERS:
     "Ausgelassen aufgrund der Skripteinstellungen oder vollständigem Mangel an Übersicht",
   EMPTY_RESULT_PLAYERS: "Ausgelassen aufgrund eines leeren Ergebnisses",
@@ -244,13 +244,13 @@ var CT_DE_MESSAGES_V3: I18nLanguageMessages = {
   CRITICAL_ERROR_HCAPTCHA:
     "Kritischer Fehler: Kein Spielertabellen-Selektor auf der Seite, hCaptcha Bot-Schutz?",
 };
-var CT_CZ_MESSAGES_V3: I18nLanguageMessages = {
+var CT_CZ_MESSAGES_V2: I18nLanguageMessages = {
   GO_TO_TRIBE_MEMBERS_TAB:
     "Chyba: Přejděte na Kmen -> Členové -> Vojenské jednotky nebo Obrana",
   EMPTY_PLAYERS_TABLE: "Chyba: Nepodařilo se načíst hráče z aktuální stránky!",
   SCRIPT_NAME_ARMY: "Sběr vojsk",
   SCRIPT_NAME_DEFF: "Sběr obrany",
-  SCRIPT_NAME_WITH_AUTHOR: "Skript collect_troops_v3 od Rafsaf",
+  SCRIPT_NAME_WITH_AUTHOR: "Skript collect_troops_V2 od Rafsaf",
   CONFIG_DISABLED_PLAYERS:
     "Přeskočeno kvůli nastavení skriptu nebo úplnému nedostatku přehledu",
   EMPTY_RESULT_PLAYERS: "Přeskočeno kvůli prázdnému výsledku",
@@ -265,7 +265,7 @@ var CT_CZ_MESSAGES_V3: I18nLanguageMessages = {
     "Kritická chyba: Na stránce není selektor tabulky hráčů, ochrana proti botům hCaptcha?",
 };
 
-var collectTroopsScriptByRafsafV3 = async () => {
+var collectTroopsScriptByRafsafV2 = async () => {
   const players: TWPlayer[] = [];
   const emptyResultPlayers: TWPlayer[] = [];
   const lackOfAccessPlayers: TWPlayer[] = [];
@@ -282,12 +282,12 @@ var collectTroopsScriptByRafsafV3 = async () => {
   };
 
   const userConfig: CollectTroopsDataConfig =
-    COLLECT_TROOPS_DATA_V3 ?? undefined ?? Data ?? {};
+    COLLECT_TROOPS_DATA_V2 ?? undefined ?? Data ?? {};
   const languageMessages = {
-    pl: CT_PL_MESSAGES_V3,
-    en: CT_EN_MESSAGES_V3,
-    de: CT_DE_MESSAGES_V3,
-    cz: CT_CZ_MESSAGES_V3,
+    pl: CT_PL_MESSAGES_V2,
+    en: CT_EN_MESSAGES_V2,
+    de: CT_DE_MESSAGES_V2,
+    cz: CT_CZ_MESSAGES_V2,
   };
   const language: string = userConfig.language ?? "pl";
   const I18N = languageMessages[language];
@@ -317,7 +317,7 @@ var collectTroopsScriptByRafsafV3 = async () => {
     language: language,
   };
 
-  console.log("start collectTroopsScriptByRafsafV3 with config:", scriptConfig);
+  console.log("start collectTroopsScriptByRafsafV2 with config:", scriptConfig);
 
   // Check url location
   if (
@@ -451,7 +451,7 @@ var collectTroopsScriptByRafsafV3 = async () => {
   // 5. Dialog with results.
 
   async function RenderPlayerTroops() {
-    const cacheKey = `collectTroopsScriptByRafsafV3:${scriptMode}`;
+    const cacheKey = `collectTroopsScriptByRafsafV2:${scriptMode}`;
     const cacheItem = window.localStorage.getItem(cacheKey);
 
     let result: localStorageResult;
@@ -502,7 +502,7 @@ var collectTroopsScriptByRafsafV3 = async () => {
       };
 
       const progress = document.createElement("div");
-      progress.setAttribute("id", "collectTroopsScriptByRafsafV3ProgressBar");
+      progress.setAttribute("id", "collectTroopsScriptByRafsafV2ProgressBar");
       progress.style.width = "300px";
       progress.style.height = "200px";
       progress.style.position = "absolute";
@@ -597,7 +597,7 @@ var collectTroopsScriptByRafsafV3 = async () => {
     }
 
     Dialog.show(
-      "collectTroopsScriptByRafsafV3ResultDialog",
+      "collectTroopsScriptByRafsafV2ResultDialog",
       `
         <h3 style="width:600px;">${scriptConfig.scriptName}: ${
         result.tribeName
@@ -658,9 +658,9 @@ var collectTroopsScriptByRafsafV3 = async () => {
   }
   await RenderPlayerTroops();
 };
-collectTroopsScriptByRafsafV3().catch((error) => {
+collectTroopsScriptByRafsafV2().catch((error) => {
   const progress = document.getElementById(
-    "collectTroopsScriptByRafsafV3ProgressBar"
+    "collectTroopsScriptByRafsafV2ProgressBar"
   );
   if (progress !== null) {
     progress.remove();
