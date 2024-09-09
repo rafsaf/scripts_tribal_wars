@@ -2,7 +2,7 @@
 MIT License
 
 Copyright (c) 2022 rafal.safin12@gmail.com
-Source https://github.com/rafsaf/scripts_tribal_wars/blob/2024-09-09/src/collect_troops_v2.1.ts
+Source https://github.com/rafsaf/scripts_tribal_wars/blob/2024-09-09-2/src/collect_troops_v2.1.ts
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -109,9 +109,9 @@ javascript: var COLLECT_TROOPS_DATA_V2 = {
     language: "en",
 };
 $.getScript("official-innogames-cdn-url-where-script-is-hosted");
-void 0;
+void 0; 
+*/
 
-*/ //!
 interface TribalWarsUI {
   ErrorMessage: (message: string, showTime: string) => void;
 }
@@ -444,11 +444,11 @@ var collectTroopsScriptByRafsafV2 = async () => {
   };
 
   // 1. If cacheTime smaller than actual time, use localStorage output.
-  // 3. Loop over players with access.
-  // 3.1 Fetch a player page.
-  // 3.2 Add his troops to output.
-  // 4. Add results to localStorage.
-  // 5. Dialog with results.
+  // 2. Loop over players with access.
+  // 2.1 Fetch a player page.
+  // 2.2 Add his troops to output.
+  // 3. Add results to localStorage.
+  // 4. Dialog with results.
 
   async function RenderPlayerTroops() {
     const cacheKey = `collectTroopsScriptByRafsafV2:${scriptMode}`;

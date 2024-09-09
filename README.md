@@ -43,7 +43,7 @@ void 0;
 JS version of the scripts compiled using command:
 
 ```bash
-npm run build
+tsc
 ```
 
 This project use https://github.com/JamesIves/github-pages-deploy-action for deploying this static files. Recommended for this type of project ;)
