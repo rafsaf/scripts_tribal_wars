@@ -1,10 +1,9 @@
 require("esbuild")
   .build({
     entryPoints: ["src/collect_troops_v2.ts", "src/collect_troops_v2.1.ts"],
-    minify: true,
     target: ["es2017"],
-    platform: "node",
     outdir: "public",
+    minify: true,
     watch: true,
     legalComments: "inline",
   })
