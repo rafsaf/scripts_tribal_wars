@@ -7,5 +7,6 @@
     "outDir": "./public"
   },
   "compileOnSave": true,
-  "include": ["./src/*.ts"]
+  "include": ["./src/*.ts"],
+  "exclude": ["./src/collect_troops_v2.0.ts"]
 }

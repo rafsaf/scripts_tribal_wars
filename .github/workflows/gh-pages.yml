@@ -12,7 +12,7 @@ jobs:
           cp ./public/*.js .out
           cd .out
           echo "<html><body style='font-size: xx-large;'><h1><b>Scripts listing</b></h1>" > index.html
-          find -exec echo "<a href='{}'>{}</a><br/>" \; >> index.html
+          find -exec echo "<a href='{}'>{}</a><br/>" \; | sort >> index.html
           echo "</body></html>" >> index.html
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4

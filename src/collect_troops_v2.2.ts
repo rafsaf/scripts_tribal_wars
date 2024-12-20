@@ -2,7 +2,7 @@
 MIT License
 
 Copyright (c) 2022 rafal.safin12@gmail.com
-Source https://github.com/rafsaf/scripts_tribal_wars/blob/2024-09-09-2/src/collect_troops_v2.1.ts
+Source https://github.com/rafsaf/scripts_tribal_wars/blob/2024-12-20/src/collect_troops_v2.2.ts
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
