@@ -88,8 +88,8 @@ firstLineDeff variable, applies only in Defence tab, similar to showFirstLineTro
 - firstLineDeff: <string> (default: "") line that will be showed at the result top
 when showFirstLineTroops is true, applies only in Defence tab, similar 
 to firstLineTroops
+*/
 
-*/ //!
 interface TribalWarsUI {
   ErrorMessage: (message: string, showTime: string) => void;
 }
