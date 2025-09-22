@@ -1,0 +1,124 @@
+// ==UserScript==
+// @name         GET message autocomplete
+// @version      2.2
+// @author       Rafał Safin <rafal.safin@rafsaf.pl>
+// @source       https://github.com/rafsaf/scripts_tribal_wars/blob/2025-09-22/public/GET_message_autocomplete_v2.2_global.js
+// @supportURL   https://github.com/rafsaf/scripts_tribal_wars/issues
+// @downloadURL  https://rafsaf.github.io/scripts_tribal_wars/GET_message_autocomplete_v2.2_global.js
+// @updateURL    https://rafsaf.github.io/scripts_tribal_wars/GET_message_autocomplete.latest_global.js
+// @copyright    MIT
+// @description  Autocomplete messages in tribal wars mail form with GET parameters of URL
+// @grant        none
+// @noframes
+// @match        *://*.plemiona.pl/game.php*screen=mail*mode=new*
+// @match        *://*.tribalwars.net/game.php*screen=mail*mode=new*
+// @match        *://*.die-staemme.de/game.php*screen=mail*mode=new*
+// @match        *://*.staemme.ch/game.php*screen=mail*mode=new*
+// @match        *://*.tribalwars.nl/game.php*screen=mail*mode=new*
+// @match        *://*.tribalwars.com.br/game.php*screen=mail*mode=new*
+// @match        *://*.tribalwars.com.pt/game.php*screen=mail*mode=new*
+// @match        *://*.divokekmeny.cz/game.php*screen=mail*mode=new*
+// @match        *://*.triburile.ro/game.php*screen=mail*mode=new*
+// @match        *://*.voyna-plemyon.ru/game.php*screen=mail*mode=new*
+// @match        *://*.fyletikesmaxes.gr/game.php*screen=mail*mode=new*
+// @match        *://*.divoke-kmene.sk/game.php*screen=mail*mode=new*
+// @match        *://*.klanhaboru.hu/game.php*screen=mail*mode=new*
+// @match        *://*.tribals.it/game.php*screen=mail*mode=new*
+// @match        *://*.klanlar.org/game.php*screen=mail*mode=new*
+// @match        *://*.guerretribale.fr/game.php*screen=mail*mode=new*
+// @match        *://*.guerrastribales.es/game.php*screen=mail*mode=new*
+// @match        *://*.tribalwars.ae/game.php*screen=mail*mode=new*
+// @match        *://*.tribalwars.co.uk/game.php*screen=mail*mode=new*
+// @match        *://*.tribalwars.us/game.php*screen=mail*mode=new*
+// ==/UserScript==
+
+/*!
+MIT License
+
+Copyright (c) 2022 rafal.safin12@gmail.com
+Source https://github.com/rafsaf/scripts_tribal_wars/blob/2025-09-22/public/GET_message_autocomplete_v2.2_global.js
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Important Notice: Submission License
+------------------------------------
+
+By submitting a user-generated modification (script) for use in Tribal Wars,
+the creator grants InnoGames a perpetual, irrevocable, worldwide, royalty-free,
+non-exclusive license to use, reproduce, distribute, publicly display, modify
+and create derivative works based on this modification. This license allows
+InnoGames to incorporate modifications into any aspect of the game and related
+services, including promotional and commercial activities, without the need
+to pay compensation or credit the author. The uploader represents and warrants
+that he has the legal right to grant this license and that the modification
+does not infringe the rights of any third party.
+
+About
+-----
+
+A simple and short browser script that fills in the "To", "Subject", and
+"Message content" fields in a new message if they are provided in the link.
+It automates sending messages to players after scheduling on the site,
+detecting the script and its execution only in the new message tab.
+An example of usage can be found below.
+
+to - recipient
+subject - subject
+message - message
+
+Configuration
+-------------
+
+There are no additional configuration options to customize script behaviour.
+
+Usage
+-----
+
+Installation
+To use the scripts, you must first install the appropriate browser extension (monkey):
+
+- Tampermonkey (Chrome, Opera, Microsoft Edge, Safari, Firefox)
+- Greasemonkey (Firefox)
+
+Then create a new user script and paste the code below.
+
+To use script in Tampermonkey, you must enable "Allow User Scripts" toggle for it or enable Devloper Mode.
+See https://www.tampermonkey.net/faq.php#Q209.
+
+After sucessful setup, links like that will populate fields in messages in game:
+https://pl155.plemiona.pl/game.php?screen=mail&mode=new#to=SomePlayerName&subject=MyTitle&message=MyContent
+*/
+
+const hash = window.location.hash.substring(1);
+const result = hash.split("&").reduce(function (res, item) {
+  var parts = item.split("=");
+  res[parts[0]] = parts[1];
+  return res;
+}, {});
+if ("to" in result) {
+  document.getElementById("to").value = decodeURIComponent(result.to);
+}
+if ("subject" in result) {
+  document.getElementsByName("subject")[0].value = decodeURIComponent(
+    result.subject
+  );
+}
+if ("message" in result) {
+  document.getElementById("message").value = decodeURIComponent(result.message);
+}
