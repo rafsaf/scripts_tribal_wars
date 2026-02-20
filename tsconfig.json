@@ -1,12 +1,22 @@
 {
   "compilerOptions": {
-    "lib": ["es2021", "DOM"],
+    "lib": [
+      "es2021",
+      "DOM"
+    ],
     "target": "ES2021",
     "module": "commonjs",
     "removeComments": false,
     "outDir": "./public"
   },
   "compileOnSave": true,
-  "include": ["./src/*.ts"],
-  "exclude": ["./src/collect_troops_v2.0.ts"]
+  "include": [
+    "./src/*.ts"
+  ],
+  "exclude": [
+    "./src/collect_troops_v2.0.ts",
+    "./src/collect_troops_v2.1.ts",
+    "./src/collect_troops_v2.2.ts",
+    "./src/collect_troops_v2.3.ts"
+  ]
 }

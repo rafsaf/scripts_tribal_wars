@@ -29,22 +29,11 @@ void 0;
 But for testing purposes and for www.tribalwars.net where hosting is on script owner behalf I prepared simple gh-pages site https://rafsaf.github.io/scripts_tribal_wars/ updated on every push so scripts can be also triggered in this way:
 
 ```js
-javascript: var COLLECT_TROOPS_DATA_V2 = {
-  cache: true,
-  cacheTime: 5,
-  removedPlayers: "",
-  allowedPlayers: "",
-  firstLineTroops: "",
-  showFirstLineTroops: false,
-  showNicknamesTroops: false,
-  firstLineDeff: "",
-  showFirstLineDeff: false,
-  showNicknamesDeff: false,
-  language: "en"
-};
-$.getScript("https://rafsaf.github.io/scripts_tribal_wars/collect_troops_v2.1.js");
+javascript: $.getScript("https://rafsaf.github.io/scripts_tribal_wars/collect_troops_v20260218.js");
 void 0;
 ```
+
+(or f12 and copy paste JS content into console and press Enter)
 
 ## Development
 
